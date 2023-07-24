@@ -1,21 +1,12 @@
 import React from 'react'
-import InputModal from './QuestionsAnswers/InputModal.jsx'
-import AnswerModal from './QuestionsAnswers/AnswerModal.jsx'
-import ComparisonModal from './relatedProducts/ComparisonModal.jsx'
-import NewReviewModal from './ratingsAndReviews/NewReviewModal.jsx'
 import {useSelector} from 'react-redux'
+import { RootState } from '../redux/store';
 
-export default function Modal({ type, onClose, id }) {
-  if (!useSelector(state => state.open)) return null;
-  switch (type) {
-    case 'InputModal':
-      return <InputModal onClose={onClose} />
-    case 'ComparisonModal':
-      return <ComparisonModal onClose={onClose} />
-    case 'AnswerModal':
-      return <AnswerModal id={id} onClose={onClose} />
-    case 'NewReviewModal':
-      return <NewReviewModal onClose={onClose} />
-  }
+export default function Modal() {
+  const openModal = useSelector((state: RootState) => state.openModal);
+
+  if (!openModal) return null;
+  return <><h1>Modal</h1></>
+
 
 }

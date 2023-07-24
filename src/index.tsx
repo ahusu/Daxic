@@ -3,12 +3,7 @@ import { createRoot } from 'react-dom/client';
 import App from './components/App';
 import rootReducer from './redux/reducers';
 import {Provider} from 'react-redux';
-import { configureStore } from '@reduxjs/toolkit';
-
-// Create a store using configureStore
-const store = configureStore({
-    reducer: rootReducer
-});
+import store from './redux/store';
 
 const container = document.getElementById('app');
 if (container) {

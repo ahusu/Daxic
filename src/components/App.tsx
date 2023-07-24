@@ -7,6 +7,7 @@ export default function App() {
 
   return (
     <div>
+      <h1> This is the App</h1>
       <LandingPage />
       {/* <Modal id={useSelector(state => state.modalType.id)} type={useSelector(state => state.modalType.type)} onClose={() => dispatch(closeModal())} /> */}
 
