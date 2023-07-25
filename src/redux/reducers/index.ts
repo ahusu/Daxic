@@ -1,10 +1,9 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import userReducer from './userSlice'; // Import the slice, not the traditional reducer function
 import openModalReducer from './openModalSlice'
-
+import pageReducer from './pageSlice'
 
 const rootReducer = combineReducers({
-  user: userReducer,
+  page: pageReducer,
   openModal: openModalReducer,
   // Other reducers from different slices can be combined here...
 });
