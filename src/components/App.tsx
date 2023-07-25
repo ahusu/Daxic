@@ -44,7 +44,7 @@ export default function App() {
 
   return (
     <div>
-      <div id='navbar' className="flex w-2/3">
+      <div id='navbar' className="flex w-2/3 w-10/12 m-4 p-4 m-auto">
       <div className="h-6 w-14" onClick={() => { navClick('add') }}><h3>Add a disc</h3></div>
         {pages.map((title) => {
           return (<div className="h-6 w-14" onClick={() => { navClick(title) }}><h3>{title}</h3></div>)

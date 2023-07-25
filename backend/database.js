@@ -12,11 +12,4 @@ const connectionConfig = {
 
 const db = pgp(connectionConfig);
 
-// Test the connection
-db.one('SELECT 1 as test')
-  .then((result) => {
-    console.log('Connection to PostgreSQL successful:', result);
-  })
-  .catch((error) => {
-    console.error('Error connecting to PostgreSQL:', error);
-  });
+module.exports = {db}
