@@ -1,8 +1,7 @@
 import React from "react";
-import { useState } from "react";
 
 
-export default function LandingPage() {
+export default function Landing() {
 
   return (
     <div>

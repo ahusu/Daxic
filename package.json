@@ -1,7 +1,9 @@
 {
   "scripts": {
-    "start": "node backend/server.js && npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
-    "build:tailwind": "postcss ./src/input.css -o dist/input.css",
+    "start": "npm run dev:server",
+    "dev:server": "webpack serve --mode development --hot --open",
+    "dev:tailwind": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
+    "build:tailwind": "npx tailwindcss -i ./src/input.css -o ./dist/output.css",
     "build:ts": "tsc",
     "build": "npm run build:tailwind && npm run build:ts",
     "tailwind": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
@@ -40,6 +42,7 @@
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4",
     "webpack-dev-middleware": "^6.1.1",
+    "webpack-dev-server": "^4.15.1",
     "webpack-hot-middleware": "^2.25.4"
   }
 }
