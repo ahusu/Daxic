@@ -3,7 +3,7 @@ import Landing from './pages/Landing'
 import Stats from './pages/Stats'
 import Recs from './pages/Recs'
 import Learn from './pages/Learn'
-import Modal from './Modal'
+import AddDisc from './AddDisc'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '../redux/store';
 import { changePage } from '../redux/reducers/pageSlice';
@@ -44,14 +44,14 @@ export default function App() {
 
   return (
     <div>
-      <div id='navbar' className="flex w-2/3 w-10/12 m-4 p-4 m-auto">
+      <div id='navbar' className="flex w-10/12 h 1/12 m-4 p-4 m-auto">
       <div className="h-6 w-14" onClick={() => { navClick('add') }}><h3>Add a disc</h3></div>
         {pages.map((title) => {
           return (<div className="h-6 w-14" onClick={() => { navClick(title) }}><h3>{title}</h3></div>)
         })}
       </div>
       {display}
-      {useSelector((state:RootState)=>state.openModal.open)?<Modal />:null}
+      {useSelector((state:RootState)=>state.openModal.open)?<AddDisc />:null}
 
     </div>
   )

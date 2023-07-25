@@ -4,8 +4,6 @@
     "dev:server": "webpack serve --mode development --hot --open",
     "dev:tailwind": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
     "build:tailwind": "npx tailwindcss -i ./src/input.css -o ./dist/output.css",
-    "build:ts": "tsc",
-    "build": "npm run build:tailwind && npm run build:ts",
     "tailwind": "npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch"
   },
   "dependencies": {

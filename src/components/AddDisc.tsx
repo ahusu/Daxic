@@ -4,7 +4,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import { RootState } from '../redux/store';
 import {closeModal} from '../redux/reducers/openModalSlice'
 
-export default function Modal() {
+export default function AddDisc() {
   const openModal = useSelector((state: RootState) => state.openModal);
   const portal = document.getElementById('portal');
   if (!portal) return null;
