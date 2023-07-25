@@ -3,6 +3,7 @@ import Landing from './pages/Landing'
 import Stats from './pages/Stats'
 import Recs from './pages/Recs'
 import Learn from './pages/Learn'
+import Modal from './Modal'
 import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from '../redux/store';
 import { changePage } from '../redux/reducers/pageSlice';
@@ -16,7 +17,7 @@ export default function App() {
 
   const navClick = (title: string) => {
     if (title==='add') {
-      dispatch(openModal)
+      dispatch(openModal(1))
 
     } else {
       dispatch(changePage(title))
@@ -50,7 +51,7 @@ export default function App() {
         })}
       </div>
       {display}
-      {/* <Modal id={useSelector(state => state.modalType.id)} type={useSelector(state => state.modalType.type)} onClose={() => dispatch(closeModal())} /> */}
+      {useSelector((state:RootState)=>state.openModal.open)?<Modal />:null}
 
     </div>
   )

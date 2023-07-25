@@ -18,6 +18,7 @@ const openModalSlice = createSlice({
     },
     closeModal: (state, action) => {
       state.open = false;
+      state.type = ''
     }
   },
 });
