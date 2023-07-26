@@ -4,6 +4,7 @@ const port = process.env.PORT || 3000;
 const path = require("path");
 const morgan = require('morgan');
 const {db} = require('./database')
+const {getChatGPTResponse} = require ('./openai');
 
 //webpack should watch for changes and updates the bundle.js in dist
 const webpack = require('webpack');
@@ -34,6 +35,17 @@ app.get('/discs', async (req, res) => {
     let discs = await db.one(query)
     res.status(200).send(discs)
   } catch(err) {
+    res.status(400).send(err)
+  }
+});
+
+app.post('/ai', async(req, res) =>{
+  console.log(req.body)
+  let prompt = `These are the discs in my bag right now: ${req.body.bag}.  Can you recommend me 3 discs to try?`
+  try {
+    let rec = await getChatGPTResponse(prompt);
+    res.status(200).send(rec)
+  } catch (err) {
     res.status(400).send(err)
   }
 });
