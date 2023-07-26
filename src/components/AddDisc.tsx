@@ -27,7 +27,7 @@ export default function AddDisc() {
     if (!sub.fade) return false
     if (!sub.manufacturer) return false
     if (!sub.color) return false
-    setStatus('Compelete')
+    setStatus('Complete')
     return true;
   };
 
