@@ -1,6 +1,6 @@
 import React from "react";
 import Landing from './pages/Landing'
-import Stats from './pages/Stats'
+import Inventory from './pages/Inventory'
 import Recs from './pages/Recs'
 import Learn from './pages/Learn'
 import AddDisc from './AddDisc'
@@ -11,7 +11,7 @@ import { openModal } from '../redux/reducers/openModalSlice';
 
 export default function App() {
   let page = useSelector((state: RootState) => state.page).page
-  let pages = ['stats', 'learn', 'recs']
+  let pages = ['Learn', 'Inventory', 'Recommendations']
   let dispatch = useDispatch();
 
 
@@ -31,23 +31,23 @@ export default function App() {
     case 'landing':
       display = <Landing key='landing' />;
       break;
-    case 'stats':
-      display = <Stats key='stats' />;
+    case 'Inventory':
+      display = <Inventory key='Inventory' />;
       break;
-    case 'recs':
+    case 'Recommendations':
       display = <Recs key='recs' />;
       break;
-    case 'learn':
+    case 'Learn':
       display = <Learn key='learn' />;
       break;
   }
 
   return (
     <div>
-      <div id='navbar' className="flex w-10/12 h 1/12 m-4 p-4 m-auto">
-      <div className="h-6 w-14" onClick={() => { navClick('add') }}><h3>Add a disc</h3></div>
+      <div id='navbar' className="flex justify-between w-10/12 h 2/12 m-4 p-4 m-auto bg-yellow-800">
+      <div className="w-1/8 text-lg" onClick={() => { navClick('add') }}><h3>Add a disc</h3></div>
         {pages.map((title) => {
-          return (<div className="h-6 w-14" onClick={() => { navClick(title) }}><h3>{title}</h3></div>)
+          return (<div className="w-1/8 text-lg" onClick={() => { navClick(title) }}><h3>{title}</h3></div>)
         })}
       </div>
       {display}

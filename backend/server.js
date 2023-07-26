@@ -14,6 +14,7 @@ const webpackConfig = require('../webpack.config.js');
 app.use(morgan('dev'));
 app.use(express.static(path.join('dist')));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }))
 const compiler = webpack(webpackConfig);
 app.use(
   webpackDevMiddleware(compiler, {
@@ -27,19 +28,27 @@ app.get('*.css', (req, res, next) => {
   next();
 });
 
-app.get('/discs/:user_id', (req, res) => {
-
+app.get('/discs', async (req, res) => {
+  let query = `SELECT * FROM discs`
+  try {
+    let discs = await db.one(query)
+    res.status(200).send(discs)
+  } catch(err) {
+    res.status(400).send(err)
+  }
 });
 
 app.post('/discs', async (req,res) => {
-  let { body: questionBody, name: questionName, email: questionEmail, product_id: productId } = req.body;
+  console.log(req.body)
   let query = `
-  INSERT INTO discs (name, speed, glide, turn, fade, weight, manufacturer, plastic
-  VALUES (1,2,3,4,5,6,7,8);`
+  INSERT INTO discs (name, speed, glide, turn, fade, weight, manufacturer, plastic, color)
+  VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9);`
   try {
-    await db.one()
+    await db.query(query, [req.body.name, req.body.speed, req.body.glide, req.body.turn, req.body.fade, req.body.weight,req.body.manufacturer, req.body.plastic, req.body.color]);
+    res.status(201).send('Success!')
   } catch (err) {
-    res.send('Error adding disc')
+    console.log(err)
+    res.status(400).send('Error adding disc')
   }
 
 });
