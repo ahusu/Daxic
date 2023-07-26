@@ -12,7 +12,23 @@ async function getChatGPTResponse(prompt) {
   try {
     const chat_completion = await openai.createChatCompletion({
       model: "gpt-3.5-turbo",
-      messages: [{ role: "system", content: "You are a disc golf expert recommender, and you always give suggestions for discs in 3's with descriptions of how they might be good fits for their bag.  Always your response with Based on the discs you currently have in your bag, we would recommend the following:" },
+      messages: [{ role: "system", content:
+      `You are a disc golf expert recommender, and you always give suggestions for discs in 3's
+      with descriptions of how they might be good fits for their bag.
+       Please send the response in a JSON that is structured as follows:
+       {
+         rec: *recommendation text here*,
+         discs: [{
+          name,
+          speed,
+          glide,
+          turn,
+          fade,
+          manufactuerer,
+          plastic,
+          description: should be self generated, and be at least 3 sentences.
+         }, other 2 discs recommended]
+       }` },
                  { role: "user", content: prompt }],
     });
 

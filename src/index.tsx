@@ -5,13 +5,11 @@ import {Provider} from 'react-redux';
 import store from './redux/store';
 
 
-
 const container = document.getElementById('app');
 if (container) {
   const root = createRoot(container);
-  root.render(<Provider store={store}><App /></Provider>);
+  root.render(<div className='justify-center flex'><Provider store={store}><App /></Provider></div>);
 
-  //webpack to update/watch
   if (module.hot) {
     module.hot.accept();
   }

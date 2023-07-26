@@ -1,4 +1,3 @@
-// types.ts
 export interface Disc {
   name: string;
   speed: number;
@@ -9,4 +8,5 @@ export interface Disc {
   manufacturer: string;
   plastic: string;
   color: string;
+  type: string;
 }

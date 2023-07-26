@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTable, TableInstance, Column } from 'react-table';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
@@ -6,9 +6,19 @@ import { Disc } from '../../types'
 
 const DiscTable: React.FC = () => {
   const discs = useSelector((state: RootState) => state.discs.discs);
+  const [filter, setFilter] = useState('')
+  const [tableDiscs, setTableDiscs] = useState<Disc[]>([])
 
-// Define the type for DiscTable
-type DiscTable = TableInstance<Disc>;
+  useEffect(() => {
+    let filtered = discs.filter((disc) => {
+      let regex = new RegExp(filter, 'i');
+      return regex.test(disc.name + disc.manufacturer + disc.plastic + disc.type)
+    });
+    setTableDiscs(filtered)}, [filter]);
+
+  const writeFilter = (e: any) => setFilter(e.target.value)
+
+  type DiscTable = TableInstance<Disc>;
 
   const columns: Column<Disc>[] = React.useMemo(
     () => [
@@ -19,6 +29,10 @@ type DiscTable = TableInstance<Disc>;
       {
         Header: 'Name',
         accessor: 'name',
+      },
+      {
+        Header: 'Type',
+        accessor: 'type'
       },
       {
         Header: 'Speed',
@@ -48,7 +62,7 @@ type DiscTable = TableInstance<Disc>;
       {
         Header: 'Color',
         accessor: 'color',
-        Cell: ({ value }: {value:string}) => (
+        Cell: ({ value }: { value: string }) => (
           <div
             style={{
               backgroundColor: value,
@@ -65,7 +79,7 @@ type DiscTable = TableInstance<Disc>;
   );
 
   // Create a table instance
-  const tableInstance = useTable({ columns, data: discs });
+  const tableInstance = useTable({ columns, data: tableDiscs });
 
   // Extract required methods and data from the table instance
   const {
@@ -77,33 +91,44 @@ type DiscTable = TableInstance<Disc>;
   } = tableInstance;
 
   return (
-    <table {...getTableProps()} className="table-auto w-full">
-      <thead>
-        {headerGroups.map((headerGroup) => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map((column) => (
-              <th {...column.getHeaderProps()} className="px-4 py-2 bg-gray-100">
-                {column.render('Header')}
-              </th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row) => {
-          prepareRow(row);
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map((cell) => (
-                <td {...cell.getCellProps()} className="border px-4 py-2">
-                  {cell.render('Cell')}
-                </td>
+    <>
+      <div className=''>
+        <input
+          type="text"
+          placeholder="Filter discs"
+          value={filter}
+          onChange={(e)=>{writeFilter(e)}}
+          className="mb-4"
+        />
+      </div>
+      <table {...getTableProps()} className="table-auto w-full">
+        <thead>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <th {...column.getHeaderProps()} className="px-4 py-2 bg-gray-100">
+                  {column.render('Header')}
+                </th>
               ))}
             </tr>
-          );
-        })}
-      </tbody>
-    </table>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row) => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell) => (
+                  <td {...cell.getCellProps()} className="border px-4 py-2">
+                    {cell.render('Cell')}
+                  </td>
+                ))}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </>
   );
 };
 
