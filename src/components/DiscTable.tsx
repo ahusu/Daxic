@@ -110,7 +110,7 @@ const DiscTable: React.FC = () => {
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps()} className="px-4 py-2 bg-gray-100">
+                <th {...column.getHeaderProps()} className="px-4 py-2 bg-gray-200">
                   {column.render('Header')}
                 </th>
               ))}
@@ -122,7 +122,7 @@ const DiscTable: React.FC = () => {
             prepareRow(row);
             return (
               <tr {...row.getRowProps()}
-                className="border px-4 py-2 "
+                className="border px-4 py-2 bg-gray-100"
                 key={row.original.name+row.original.color}
                 onClick={() => {
                   const disc = row.original;
