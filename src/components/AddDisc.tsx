@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import ReactDom from 'react-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../redux/store';
+import { RootState, AppDispatch } from '../redux/store';
 import { closeModal } from '../redux/reducers/openModalSlice';
 import { CirclePicker } from 'react-color';
-import {addDisc, updateDiscs} from '../redux/reducers/discsSlice';
+import {addDisc} from '../redux/reducers/discsSlice';
 
 
 export default function AddDisc() {
@@ -12,7 +12,7 @@ export default function AddDisc() {
   const portal = document.getElementById('portal');
   if (!portal) return null;
   if (!openModal) return null;
-  let dispatch = useDispatch();
+  let dispatch:AppDispatch = useDispatch();
 
   const [status, setStatus] = useState('init')
   //combine into one state obj with properties
