@@ -6,8 +6,8 @@ import { closeModal } from '../redux/reducers/openModalSlice';
 import { CirclePicker } from 'react-color';
 import {addDisc, editDisc, deleteDisc, fetchDiscsData} from '../redux/reducers/discsSlice';
 
-
 export default function AddDisc() {
+
   const openModal = useSelector((state: RootState) => state.openModal);
   const portal = document.getElementById('portal');
   if (!portal) return null;
@@ -22,20 +22,33 @@ export default function AddDisc() {
 
   const [status, setStatus] = useState('init');
   const [sub, setSub] = useState<any>({});
+  const [fill, setFill] = useState<any[]>([])
 
-  const validateForm = () => {
-    console.log(sub)
-    setStatus('Incomplete')
-    if (!sub.name) return false;
-    if (!sub.speed) return false;
-    if (!sub.glide||sub.glide===0) return false;
-    if (!sub.turn||sub.turn===0) return false;
-    if (!sub.fade||sub.fade===0) return false;
-    if (!sub.manufacturer) return false;
-    if (!sub.color) return false;
-    setStatus('Complete');
-    return true;
+  const validateForm = async () => {
+    setFill([]);
+    const valid =  () =>{
+      if (!sub.name) {setFill(fill.concat('Name'));}
+      if (!sub.speed) setFill(fill.concat('Speed'));
+      if (!sub.glide||sub.glide===0) setFill(fill.concat('Glide'));
+      if (!sub.turn||sub.turn===0) setFill(fill.concat('Turn'));
+      if (!sub.fade||sub.fade===0) setFill(fill.concat('Fade'));
+      if (!sub.manufacturer) setFill(fill.concat('Manufacturer'));
+      if (!sub.color) setFill(fill.concat('Color'));
+    }
+    await valid()
+    const check = async () => {
+      fill.length>0?  setStatus('Incomplete'):setStatus('Complete');
+      console.log('VF', fill)
+    }
+    await check()
+    return status === 'Complete'? true:false;
   };
+
+  useEffect(()=>{
+    console.log('useeffect' + fill + typeof fill)
+
+  },[fill])
+
 
   const post =  (body: any) => {
     if (openModal.type === 'add') dispatch(addDisc(sub));
@@ -58,7 +71,7 @@ export default function AddDisc() {
       StatusMessage = <></>;
       break;
     case 'Incomplete':
-      StatusMessage = <h4 className='text-red-500'>Please fill the required fields</h4>;
+      StatusMessage = <h4 className='text-red-500'>Please fill the required fields: {fill}</h4>;
       break;
     case 'Complete':
       StatusMessage = <h4 className='text-green-400'>Submitted!</h4>;
@@ -135,7 +148,7 @@ export default function AddDisc() {
             />
             <label className="block mb-1">Weight in grams</label>
             <input
-              type="text"
+              type="number"
               value={sub.weight}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
               onChange={(e: any) => setSub({ ...sub, weight: e.target.value })}
@@ -172,7 +185,8 @@ export default function AddDisc() {
           <button
             className="px-4 py-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600 focus:outline-none"
             onClick={() => {
-              if (validateForm()) {
+              validateForm();
+              if (status === 'Complete') {
                 post(sub);
                 dispatch(closeModal(''));
               }
