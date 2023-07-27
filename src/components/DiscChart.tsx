@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../redux/store';
-import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, LabelList, Label } from 'recharts';
+import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, LabelList, Label, Cell } from 'recharts';
 
 const DiscChart: React.FC = () => {
   const discs = useSelector((state: RootState) => state.discs.discs);
@@ -13,6 +13,14 @@ const DiscChart: React.FC = () => {
     color: disc.color, // Color of the point based on the color property of each disc
     name: disc.name, // Name of the disc
   }));
+
+  const renderCustomizedShape = (props: any) => {
+    const { cx, cy, payload } = props;
+    return (
+      <circle cx={cx} cy={cy} r={10} fill={payload.color} /> // multiply r by 3 times of original size
+    );
+};
+
   const dataMaxY = Math.max(...data.map((disc) => disc.y));
   return (
     <div className="w-full h-full">
@@ -27,7 +35,10 @@ const DiscChart: React.FC = () => {
         />
         <YAxis type="number" dataKey="y" name="Speed" domain={[0, 14]} tickCount={Math.ceil(dataMaxY / 2)} />
         <Tooltip cursor={{ strokeDasharray: '3 3' }} content={<CustomTooltip />} />
-        <Scatter name="Disc Data" data={data} fill="#3182CE" shape="circle" strokeWidth={2}>
+        <Scatter name="Disc Data" data={data} shape={renderCustomizedShape}>
+          {
+            data.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)
+          }
           <LabelList dataKey="name" position="top" /> {/* Display disc name as label on top of each point */}
         </Scatter>
         <Label value="Turn/Fade" offset={0} position="insideBottom" />
@@ -44,7 +55,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
       <div className="custom-tooltip">
         <p>{`Disc Name: ${disc.name}`}</p>
         <p>{`Speed: ${disc.y}`}</p>
-        <p>{`Turn: ${disc.x}`}</p>
+        <p>{`Stability: ${disc.x}`}</p>
       </div>
     );
   }

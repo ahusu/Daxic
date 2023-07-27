@@ -17,3 +17,7 @@
     }
   }
 }
+.bg {
+  background-image: url('https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/1b4c2511-24fc-4c57-bf84-de5e6669d659/d239c4p-c6572e9a-3e07-40bb-ad6e-ab819d0a4b3f.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzFiNGMyNTExLTI0ZmMtNGM1Ny1iZjg0LWRlNWU2NjY5ZDY1OVwvZDIzOWM0cC1jNjU3MmU5YS0zZTA3LTQwYmItYWQ2ZS1hYjgxOWQwYTRiM2YuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.HZ7L7XhwKwe19iDyzXh_2eApIoFjCFU2V2NWcHWPF6Y');
+  background-size: 35%
+}

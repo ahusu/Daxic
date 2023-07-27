@@ -28,7 +28,7 @@ export default function App() {
 
   const navClick = (title: string) => {
     if (title === 'add') {
-      dispatch(openModal('add'))
+      dispatch(openModal({type:'add'}))
 
     } else {
       dispatch(changePage(title))

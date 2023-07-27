@@ -18,6 +18,29 @@ export const addDisc = createAsyncThunk('discs/addDisc', async (disc: Disc) => {
   const response = await axios.post('/discs', disc);
   return response.data;
 });
+export const editDisc = createAsyncThunk('discs/editDisc', async (disc: Disc) => {
+  const response = await axios.put('/discs', disc);
+  return response.data;
+});
+export const deleteDisc = createAsyncThunk('discs/deleteDisc', async (disc_id: String) => {
+  let config = {
+    method: 'delete',
+    url: `http://localhost:3000/discs/${disc_id}`,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+  };
+
+  axios.request(config)
+  .then((response) => {
+    console.log(JSON.stringify(response.data));
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+
+  return
+});
 
 const discsSlice = createSlice({
   name: 'discs',
@@ -28,6 +51,9 @@ const discsSlice = createSlice({
       state.discs = action.payload;
     });
     builder.addCase(addDisc.fulfilled, (state, action) => {
+      state.discs.push(action.payload);
+    });
+    builder.addCase(editDisc.fulfilled, (state, action) => {
       state.discs.push(action.payload);
     });
   },

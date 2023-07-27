@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../redux/store';
 import { closeModal } from '../redux/reducers/openModalSlice';
 import { CirclePicker } from 'react-color';
-import {addDisc} from '../redux/reducers/discsSlice';
+import {addDisc, editDisc, deleteDisc, fetchDiscsData} from '../redux/reducers/discsSlice';
 
 
 export default function AddDisc() {
@@ -12,19 +12,20 @@ export default function AddDisc() {
   const portal = document.getElementById('portal');
   if (!portal) return null;
   if (!openModal) return null;
+
   let dispatch:AppDispatch = useDispatch();
 
   const [status, setStatus] = useState('init')
-  //combine into one state obj with properties
-  const [sub, setSub] = useState<any>({})
+  const [sub, setSub] = useState<any>({...openModal.edit})
 
   const validateForm = () => {
+    console.log(sub)
     setStatus('Incomplete')
     if (!sub.name) return false
     if (!sub.speed) return false
-    if (!sub.glide) return false
-    if (!sub.turn) return false
-    if (!sub.fade) return false
+    if (!sub.glide||sub.glide===0) return false
+    if (!sub.turn||sub.turn===0) return false
+    if (!sub.fade||sub.fade===0) return false
     if (!sub.manufacturer) return false
     if (!sub.color) return false
     setStatus('Complete')
@@ -32,7 +33,14 @@ export default function AddDisc() {
   };
 
   const post =  (body: any) => {
-    dispatch(addDisc(sub))
+    if (openModal.type === 'add') dispatch(addDisc(sub))
+    if (openModal.type == 'edit') {
+      dispatch(editDisc(sub))}
+    setTimeout(()=>{dispatch(fetchDiscsData())},100)
+  }
+  const remove = ()=>{
+    dispatch(deleteDisc(sub.id))
+    setTimeout(()=>{dispatch(fetchDiscsData())},100)
   }
 
   const handleColor = (color: any) => {
@@ -53,10 +61,10 @@ export default function AddDisc() {
   }
   return ReactDom.createPortal(<>
     <div className="fixed inset-0 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-lg p-4 w-full sm:max-w-md">
+      <div className="bg-white rounded-lg shadow-lg p-4 w-full sm:max-w-lg" style={{ width: '30vw' }}>
         {/* Header */}
         <div className="flex items-center justify-between pb-2 border-b border-solid border-gray-300 mb-2">
-          <h3 className="text-3xl font-semibold">Add a Disc:</h3>
+          <h3 className="text-3xl font-semibold">{openModal.type==='add'? 'Add a Disc:': 'Edit Disc:'}</h3>
           <button
             className="text-gray-500 hover:text-gray-800 focus:outline-none"
             onClick={() => dispatch(closeModal(''))}
@@ -71,6 +79,7 @@ export default function AddDisc() {
             <label className="block mb-1">Disc Name</label>
             <input
               type="text"
+              value={openModal.type==='edit'? sub.name:""}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
               onChange={(e: any) => setSub({ ...sub, name: e.target.value })}
             />
@@ -79,12 +88,14 @@ export default function AddDisc() {
                 <label className="block mb-1">Speed</label>
                 <input
                   type="number"
+                  value={openModal.type==='edit'? sub.speed:""}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
                   onChange={(e: any) => setSub({ ...sub, speed: e.target.value })}
                 />
                 <label className="block mb-1">Glide</label>
                 <input
                   type="number"
+                  value={openModal.type==='edit'? sub.glide:""}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
                   onChange={(e: any) => setSub({ ...sub, glide: e.target.value })}
                 />
@@ -94,12 +105,14 @@ export default function AddDisc() {
                 <label className="block mb-1">Turn</label>
                 <input
                   type="number"
+                  value={openModal.type==='edit'? sub.turn:""}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
                   onChange={(e: any) => setSub({ ...sub, turn: e.target.value })}
                 />
                 <label className="block mb-1">Fade</label>
                 <input
                   type="number"
+                  value={openModal.type==='edit'? sub.fade:""}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
                   onChange={(e: any) => setSub({ ...sub, fade: e.target.value })}
                 />
@@ -111,18 +124,21 @@ export default function AddDisc() {
             <label className="block mb-1">Manufacturer</label>
             <input
               type="text"
+              value={openModal.type==='edit'? sub.manufacturer:""}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
               onChange={(e: any) => setSub({ ...sub, manufacturer: e.target.value })}
             />
             <label className="block mb-1">Weight in grams</label>
             <input
               type="text"
+              value={openModal.type==='edit'? sub.weight:""}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
               onChange={(e: any) => setSub({ ...sub, weight: e.target.value })}
             />
             <label className="block mb-1">Plastic type</label>
             <input
               type="text"
+              value={openModal.type==='edit'? sub.plastic:""}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
               onChange={(e: any) => setSub({ ...sub, plastic: e.target.value })}
             />
@@ -130,11 +146,19 @@ export default function AddDisc() {
         </div>
 
         {/* Color Picker */}
-        <CirclePicker onChange={(c) => handleColor(c)} className="mb-4" />
+        <CirclePicker onChange={(c) => handleColor(c)} className="mb-4 p-2 m-2" />
 
         {/* Footer */}
-        <div className="flex justify-end">
-          {StatusMessage}
+        {StatusMessage}
+        <div className="flex justify-between mt-2">
+
+          {openModal.type==='edit'? <button className="px-4 py-2 text-red-500 rounded-md border border-red-500 hover:text-red-800 hover:border-red-800 focus:outline-none ml-2"
+          onClick={() => {
+              remove();
+              dispatch(fetchDiscsData())
+              dispatch(closeModal(''));
+          }}
+          >Delete Disc</button>:""}
           <button
             className="px-4 py-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600 focus:outline-none"
             onClick={() => {
@@ -144,13 +168,13 @@ export default function AddDisc() {
               }
             }}
           >
-            Submit
+            {openModal.type==='add'?'Submit':'Submit Edit'}
           </button>
           <button
             className="px-4 py-2 text-red-500 rounded-md border border-red-500 hover:text-red-800 hover:border-red-800 focus:outline-none ml-2"
             onClick={() => dispatch(closeModal(''))}
           >
-            Discard
+            {openModal.type==='add'?'Discard':'Discard Changes'}
           </button>
         </div>
       </div>

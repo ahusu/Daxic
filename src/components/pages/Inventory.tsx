@@ -8,7 +8,7 @@ export default function Inventory() {
 
   return (<>
     <div className="flex">
-      <div className="w-2/3 h-full m-4 p-4">
+      <div className="w-2/3 h-full m-4 p-4 object-contain">
         <h2 className="text-lg m-2 p-1">Disc Inventory</h2>
         <DiscTable />
       </div>

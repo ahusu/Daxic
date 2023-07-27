@@ -51,23 +51,53 @@ app.post('/ai', async (req, res) => {
 });
 
 app.post('/discs', async (req, res) => {
-  let discType = '';
-  if (req.body.speed <= 3) { discType = "Putter"; }
-  else if (req.body.speed <= 5) { discType = 'Midrange'; }
-  else if (req.body.speed <= 8) { discType = 'Fairway Driver'; }
-  else { discType = 'Distance Driver'; };
+
   let query = `
   INSERT INTO discs (name, speed, glide, turn, fade, weight, manufacturer, plastic, color, type)
   VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10);`
   try {
-    await db.query(query, [req.body.name, req.body.speed, req.body.glide, req.body.turn, req.body.fade, req.body.weight, req.body.manufacturer, req.body.plastic, req.body.color, discType]);
+    await db.query(query, [req.body.name, req.body.speed, req.body.glide, req.body.turn, req.body.fade, req.body.weight, req.body.manufacturer, req.body.plastic, req.body.color, findType(req.body.speed)]);
     res.status(201).send('Success!')
   } catch (err) {
     console.log(err)
     res.status(400).send('Error adding disc')
   }
-
 });
+
+app.put('/discs', async(req,res)=>{
+  console.log(req.body)
+  let query = `UPDATE discs SET
+  name = $1, speed = $2, glide= $3, turn= $4, fade= $5, weight= $6, manufacturer= $7, plastic= $8, color= $9, type= $10
+  WHERE id = $11`
+  try {
+    await db.query(query, [req.body.name, req.body.speed, req.body.glide, req.body.turn, req.body.fade, req.body.weight, req.body.manufacturer, req.body.plastic, req.body.color, findType(req.body.speed), req.body.id]);
+    res.status(200).send('Success!')
+  } catch (err) {
+    console.log(err)
+    res.status(400).send('Error editing disc')
+  }
+});
+
+app.delete('/discs/:id', async(req,res)=>{
+  let query = `DELETE FROM discs
+  WHERE id = $1`
+  try {
+    await db.query(query, req.params.id);
+    res.status(202).send('Success!')
+  } catch (err) {
+    console.log(err)
+    res.status(400).send('Error removing disc')
+  }
+});
+
+const findType = (speed) =>{
+  let discType;
+  if (speed <= 3) { discType = "Putter"; }
+  else if (speed <= 5) { discType = 'Midrange'; }
+  else if (speed <= 8) { discType = 'Fairway Driver'; }
+  else { discType = 'Distance Driver'; };
+  return discType;
+}
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
