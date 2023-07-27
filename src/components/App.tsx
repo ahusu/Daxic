@@ -13,7 +13,6 @@ import { fetchDiscsData } from '../redux/reducers/discsSlice';
 
 export default function App() {
   let page = useSelector((state: RootState) => state.page).page
-  let modal = useSelector((state: RootState) => state.openModal).open
   let pages = ['Learn', 'Inventory', 'Recommendations']
   let dispatch:AppDispatch = useDispatch();
 
@@ -28,7 +27,7 @@ export default function App() {
 
   const navClick = (title: string) => {
     if (title === 'add') {
-      dispatch(openModal({type:'add'}))
+      dispatch(openModal({type:'add', edit:{}}))
 
     } else {
       dispatch(changePage(title))

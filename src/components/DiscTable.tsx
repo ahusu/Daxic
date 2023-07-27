@@ -17,7 +17,8 @@ const DiscTable: React.FC = () => {
       return regex.test(disc.name + disc.manufacturer + disc.plastic + disc.type)
     });
     setTableDiscs(filtered)
-  }, [filter]);
+  }, [filter,discs]);
+
 
   const writeFilter = (e: any) => setFilter(e.target.value)
 

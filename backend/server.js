@@ -41,7 +41,7 @@ app.get('/discs', async (req, res) => {
 
 app.post('/ai', async (req, res) => {
   console.log(req.body)
-  let prompt = `These are the discs in my bag right now: ${req.body.bag}.  Can you recommend me 3 discs to try with the descriptions of how they might be good fits?`
+  let prompt = `These are the discs in my bag right now: ${req.body.bag}.  Can you recommend me 5 discs to try with the descriptions of how they might be good fits? Please separate each description into it's own paragraph`
   try {
     let rec = await getChatGPTResponse(prompt);
     res.status(200).send(rec)

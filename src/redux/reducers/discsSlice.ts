@@ -49,11 +49,9 @@ const discsSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchDiscsData.fulfilled, (state, action) => {
       state.discs = action.payload;
+      state.bag = state.discs.map((disc)=>disc.name)
     });
     builder.addCase(addDisc.fulfilled, (state, action) => {
-      state.discs.push(action.payload);
-    });
-    builder.addCase(editDisc.fulfilled, (state, action) => {
       state.discs.push(action.payload);
     });
   },
