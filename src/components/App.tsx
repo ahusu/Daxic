@@ -1,23 +1,33 @@
-import React from "react";
-import Landing from './pages/Landing'
-import Inventory from './pages/Inventory'
-import Recs from './pages/Recs'
-import Learn from './pages/Learn'
-import AddDisc from './AddDisc'
-import { useSelector, useDispatch } from 'react-redux'
-import { RootState } from '../redux/store';
+import React, { useEffect } from "react";
+import Landing from './pages/Landing';
+import Inventory from './pages/Inventory';
+import Recs from './pages/Recs';
+import Learn from './pages/Learn';
+import AddDisc from './AddDisc';
+import Banner from "./Banner";
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState, AppDispatch } from '../redux/store';
 import { changePage } from '../redux/reducers/pageSlice';
 import { openModal } from '../redux/reducers/openModalSlice';
+import { fetchDiscsData } from '../redux/reducers/discsSlice';
 
 export default function App() {
   let page = useSelector((state: RootState) => state.page).page
   let pages = ['Learn', 'Inventory', 'Recommendations']
-  let dispatch = useDispatch();
+  let dispatch:AppDispatch = useDispatch();
+
+  //fetch disc data and axios  logic inside of discs slice
+
+
+  useEffect(() => {
+    dispatch(fetchDiscsData());
+  }, []);
+
 
 
   const navClick = (title: string) => {
-    if (title==='add') {
-      dispatch(openModal(1))
+    if (title === 'add') {
+      dispatch(openModal({type:'add', edit:{}}))
 
     } else {
       dispatch(changePage(title))
@@ -43,17 +53,17 @@ export default function App() {
   }
 
   return (
-    <div>
-      <div id='navbar' className="flex justify-between w-10/12 h 2/12 m-4 p-4 m-auto bg-yellow-800">
-      <div className="w-1/8 text-lg" onClick={() => { navClick('add') }}><h3>Add a disc</h3></div>
+    <div className="w-10/12 m-2 p-1 justify-between">
+      <Banner />
+      <div id='navbar' className="flex justify-between w-full h-[65px] m-auto bg-indigo-300">
+        <div className="hover:bg-indigo-500 w-3/12 text-lg justify-center items-center flex" onClick={() => { navClick('add') }}>Add a disc</div>
         {pages.map((title) => {
-          return (<div className="w-1/8 text-lg" onClick={() => { navClick(title) }}><h3>{title}</h3></div>)
+          return (<div className="hover:bg-indigo-500 w-3/12 text-lg justify-center items-center flex" onClick={() => { navClick(title) }}>{title}</div>)
         })}
       </div>
       {display}
-      {useSelector((state:RootState)=>state.openModal.open)?<AddDisc />:null}
+      {useSelector((state: RootState) => state.openModal.open) ? <AddDisc /> : null}
 
     </div>
   )
 }
-

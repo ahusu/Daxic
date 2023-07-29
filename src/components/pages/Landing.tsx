@@ -1,17 +1,23 @@
 import React from "react";
 
 
-export default function Landing() {
-
+const Landing: React.FC = () => {
   return (
-    <div>
-      <h1>Welcome to Daxis! Click add a disc to get started!</h1>
-      <div className='flex'>
-        <div onClick={()=>{}}>
-          <h3> Click here to add a disc!</h3>
-        </div>
-      </div>
-    </div>
-  )
-}
+    <>
 
+      <div className="flex flex-col items-start justify-center h-[800] px-4 py-8">
+        <div className="flex justify-left">
+          <div className="w-[100px]"></div>
+          <img className="p-4 m-4" src="https://uxwing.com/wp-content/themes/uxwing/download/arrow-direction/twisted-arrow-left-to-top-orange-icon.png" alt="arrow pointing to Add a Disc button" width="400" ></img>
+        </div>
+        <h1 className="text-3xl font-bold mb-4">Welcome to our Daxic, your new favorite Disc Management tool!</h1>
+        <p className="text-lg mb-8">
+          Getting started is simple. Just click on "Add a Disc" to begin adding discs to your bag.
+        </p>
+
+      </div>
+    </>
+  );
+};
+
+export default Landing;
