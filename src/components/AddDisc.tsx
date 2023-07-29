@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../redux/store';
 import { closeModal } from '../redux/reducers/openModalSlice';
 import { CirclePicker } from 'react-color';
-import {addDisc, editDisc, deleteDisc, fetchDiscsData} from '../redux/reducers/discsSlice';
+import { addDisc, editDisc, deleteDisc, fetchDiscsData } from '../redux/reducers/discsSlice';
 
 export default function AddDisc() {
 
@@ -13,57 +13,57 @@ export default function AddDisc() {
   if (!portal) return null;
   if (!openModal) return null;
 
-  let dispatch:AppDispatch = useDispatch();
+  let dispatch: AppDispatch = useDispatch();
 
   useEffect(() => {
-    setSub(openModal.edit ? {...openModal.edit} : {});
+    setSub(openModal.edit ? { ...openModal.edit } : {});
   }, [openModal.edit]);
 
+  type ValidatedKeys = 'Name' | 'Speed' | 'Glide' | 'Turn' | 'Fade' | 'Manufacturer' | 'Color';
+  type FillState = { [K in ValidatedKeys]: boolean };
 
   const [status, setStatus] = useState('init');
   const [sub, setSub] = useState<any>({});
-  const [fill, setFill] = useState<any[]>([])
+  const [fill, setFill] = useState<FillState>({
+    Name: false,
+    Speed: false,
+    Glide: false,
+    Turn: false,
+    Fade: false,
+    Manufacturer: false,
+    Color: false
+  });
 
-  const validateForm = async () => {
-    setFill([]);
-    const valid =  () =>{
-      if (!sub.name) {setFill(fill.concat('Name'));}
-      if (!sub.speed) setFill(fill.concat('Speed'));
-      if (!sub.glide||sub.glide===0) setFill(fill.concat('Glide'));
-      if (!sub.turn||sub.turn===0) setFill(fill.concat('Turn'));
-      if (!sub.fade||sub.fade===0) setFill(fill.concat('Fade'));
-      if (!sub.manufacturer) setFill(fill.concat('Manufacturer'));
-      if (!sub.color) setFill(fill.concat('Color'));
-    }
-    await valid()
-    const check = async () => {
-      fill.length>0?  setStatus('Incomplete'):setStatus('Complete');
-      console.log('VF', fill)
-    }
-    await check()
-    return status === 'Complete'? true:false;
+  const validateForm = () => {
+    let checkFill = { ...fill }
+    if (sub.name) checkFill.Name = true;
+    if (sub.speed) checkFill.Speed = true;
+    if (sub.glide || sub.glide === 0) checkFill.Glide = true;
+    if (sub.turn || sub.turn === 0) checkFill.Turn = true;
+    if (sub.fade || sub.fade === 0) checkFill.Fade = true;
+    if (sub.manufacturer) checkFill.Manufacturer = true;
+    if (sub.color) checkFill.Color = true;
+    setFill(checkFill);
+    let checkFalse = Object.values(checkFill).includes(false);
+    if (checkFalse) setStatus('Incomplete');
+    else setStatus('Complete');
+    return checkFalse ? false : true;
   };
 
-  useEffect(()=>{
-    console.log('useeffect' + fill + typeof fill)
-
-  },[fill])
-
-
-  const post =  (body: any) => {
+  const post = (body: any) => {
     if (openModal.type === 'add') dispatch(addDisc(sub));
     if (openModal.type == 'edit') {
-      dispatch(editDisc(sub))};
-    setTimeout(()=>{dispatch(fetchDiscsData())},100)
+      dispatch(editDisc(sub))
+    };
+    setTimeout(() => { dispatch(fetchDiscsData()) }, 200)
   }
-  const remove = ()=>{
+  const remove = () => {
     dispatch(deleteDisc(sub.id));
-    setTimeout(()=>{dispatch(fetchDiscsData())},100)
+    setTimeout(() => { dispatch(fetchDiscsData()) }, 200)
   }
 
   const handleColor = (color: any) => {
     setSub({ ...sub, color: color.hex })
-    console.log(color.hex)
   }
   let StatusMessage;
   switch (status) {
@@ -71,7 +71,7 @@ export default function AddDisc() {
       StatusMessage = <></>;
       break;
     case 'Incomplete':
-      StatusMessage = <h4 className='text-red-500'>Please fill the required fields: {fill}</h4>;
+      StatusMessage = <h4 className='text-red-500'>Please fill the required fields: {Object.keys(fill).filter((key) => !fill[key as ValidatedKeys]).join(' ')}</h4>;
       break;
     case 'Complete':
       StatusMessage = <h4 className='text-green-400'>Submitted!</h4>;
@@ -82,7 +82,7 @@ export default function AddDisc() {
       <div className="bg-white rounded-lg shadow-lg p-4 w-full sm:max-w-lg" style={{ width: '30vw' }}>
         {/* Header */}
         <div className="flex items-center justify-between pb-2 border-b border-solid border-gray-300 mb-2">
-          <h3 className="text-3xl font-semibold">{openModal.type==='add'? 'Add a Disc:': 'Edit Disc:'}</h3>
+          <h3 className="text-3xl font-semibold">{openModal.type === 'add' ? 'Add a Disc:' : 'Edit Disc:'}</h3>
           <button
             className="text-gray-500 hover:text-gray-800 focus:outline-none"
             onClick={() => dispatch(closeModal(''))}
@@ -173,26 +173,25 @@ export default function AddDisc() {
             className="px-4 py-2 text-red-500 rounded-md border border-red-500 hover:text-red-800 hover:border-red-800 focus:outline-none ml-2"
             onClick={() => dispatch(closeModal(''))}
           >
-            {openModal.type==='add'?'Discard':'Discard Changes'}
+            {openModal.type === 'add' ? 'Discard' : 'Discard Changes'}
           </button>
-          {openModal.type==='edit'? <button className="px-4 py-2 bg-red-200 text-red-700 rounded-md border border-red-500 hover:text-red-800 hover:border-red-800 focus:outline-none ml-2"
-          onClick={() => {
+          {openModal.type === 'edit' ? <button className="px-4 py-2 bg-red-200 text-red-700 rounded-md border border-red-500 hover:text-red-800 hover:border-red-800 focus:outline-none ml-2"
+            onClick={() => {
               remove();
               dispatch(closeModal(''));
-          }}
-          >Delete Disc</button>:""}
+            }}
+          >Delete Disc</button> : ""}
 
           <button
             className="px-4 py-2 bg-emerald-500 text-white rounded-md hover:bg-emerald-600 focus:outline-none"
             onClick={() => {
-              validateForm();
-              if (status === 'Complete') {
+              if (validateForm()) {
                 post(sub);
                 dispatch(closeModal(''));
               }
             }}
           >
-            {openModal.type==='add'?'Submit':'Submit Edit'}
+            {openModal.type === 'add' ? 'Submit' : 'Submit Edit'}
           </button>
         </div>
       </div>
