@@ -3,6 +3,7 @@
 Discs Inventory Management App 🥏
 Manage and keep track of your collection of discs with this easy-to-use app. Whether you're just starting out or you're an advanced collector, our app helps you organize, add, edit, and delete discs with ease.
 
+[Imgur](https://imgur.com/oXjeq95)
 
 ##Features ✨
 Add Discs: Quickly add new discs to your collection.
@@ -30,12 +31,12 @@ npm
 Clone the repository
 Navigate to the project directory:
 Install the dependencies:
-#####npm install
+```npm install```
 Create a .env file in the root directory that has the following configurations:
 OPENAI_API_KEY=*your openai API key*
 
 Start the development server:
-#####npm start
+```npm start```
 The app should now be running on http://localhost:3000.
 
 ##Usage 💡
