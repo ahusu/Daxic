@@ -3,7 +3,6 @@
 Discs Inventory Management App 🥏
 Manage and keep track of your collection of discs with this easy-to-use app. Whether you're just starting out or you're an advanced collector, our app helps you organize, add, edit, and delete discs with ease.
 
-screenshot of the app Replace the path with an actual screenshot of your app
 
 Features ✨
 Add Discs: Quickly add new discs to your collection.
