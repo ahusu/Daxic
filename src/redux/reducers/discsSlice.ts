@@ -2,18 +2,15 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { Disc } from '../../../types';
 import axios from 'axios';
 
-
 const initialState = {
   discs: [] as Disc[],
   bag: [] as string[],
 };
-
-// Define async thunks
+//Async Model functions
 export const fetchDiscsData = createAsyncThunk('discs/fetchDiscsData', async () => {
   const response = await axios.get('/discs');
   return response.data;
 });
-
 export const addDisc = createAsyncThunk('discs/addDisc', async (disc: Disc) => {
   const response = await axios.post('/discs', disc);
   return response.data;
@@ -30,16 +27,13 @@ export const deleteDisc = createAsyncThunk('discs/deleteDisc', async (disc_id: S
       'Content-Type': 'application/json'
     },
   };
-
-  axios.request(config)
-  .then((response) => {
-    console.log(JSON.stringify(response.data));
-  })
-  .catch((error) => {
+  try {
+    let response = await axios.request(config)
+    console.log(JSON.stringify(response.data))
+  }
+  catch (error) {
     console.log(error);
-  });
-
-  return
+  }
 });
 
 const discsSlice = createSlice({

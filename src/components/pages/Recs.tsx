@@ -36,7 +36,7 @@ const Recs: React.FC = () => {
       ) : (
         <>
         <div className="p-6 mt-10 bg-white rounded shadow-md">
-          <p>{recs.split(/(?=\d\.)/g).map((item, index) => <p className='p-4 m-4' key={index}>{item}</p>)}</p>
+          <p>{recs.split(/(?=\d\. )/g).map((item, index) => <p className='p-4 m-4' key={index}>{item}</p>)}</p>
         </div>
         <button onClick={handleSubmit} className="px-6 py-2 text-black text-2xl bg-red-200 rounded hover:bg-red-400">
         New Recommendations

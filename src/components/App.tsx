@@ -16,9 +16,6 @@ export default function App() {
   let pages = ['Learn', 'Inventory', 'Recommendations']
   let dispatch:AppDispatch = useDispatch();
 
-  //fetch disc data and axios  logic inside of discs slice
-
-
   useEffect(() => {
     dispatch(fetchDiscsData());
   }, []);

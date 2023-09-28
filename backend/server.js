@@ -6,7 +6,6 @@ const morgan = require('morgan');
 const { db } = require('./database')
 const { getChatGPTResponse } = require('./openai');
 
-//webpack should watch for changes and updates the bundle.js in dist
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -43,8 +42,8 @@ app.post('/ai', async (req, res) => {
   console.log(req.body)
   let prompt = `These are the discs in my bag right now: ${req.body.bag}.  Can you recommend me 5 discs to try with the descriptions of how they might be good fits? Please separate each description into it's own paragraph`
   try {
-    let rec = await getChatGPTResponse(prompt);
-    res.status(200).send(rec)
+    let gptResponse = await getChatGPTResponse(prompt);
+    res.status(200).send(gptResponse);
   } catch (err) {
     res.status(400).send(err)
   }
@@ -102,3 +101,5 @@ const findType = (speed) =>{
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
+
+module.exports = app;

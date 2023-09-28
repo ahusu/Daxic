@@ -8,7 +8,7 @@ const Learn: React.FC = () => {
   return (
     <div className="min-h-screen py-8">
 
-      {/* Flight Numbers */}
+      {/* Flight Numbers Descriptions */}
       <div className="px-4 py-2">
         <h2 className="text-xl font-semibold mb-2">Disc Flight Numbers</h2>
         <div className="flex justify-between">

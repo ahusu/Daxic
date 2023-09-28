@@ -1,9 +1,7 @@
-// userSlice.ts
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   page: 'landing',
-  // Other user-related state properties...
 };
 
 const pageSlice = createSlice({

@@ -9,7 +9,6 @@ const rootReducer = combineReducers({
   openModal: openModalReducer,
   discs: discsReducer,
   recs:recsReducer,
-  // Other reducers from different slices can be combined here...
 });
 
 export default rootReducer;

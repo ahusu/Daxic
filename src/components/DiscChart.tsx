@@ -6,18 +6,17 @@ import { ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, LabelList,
 const DiscChart: React.FC = () => {
   const discs = useSelector((state: RootState) => state.discs.discs);
 
-  // Extract speed and turn properties from discs
   const data = discs.map((disc) => ({
-    x: disc.turn+disc.fade, // X-axis will represent the Turn
-    y: disc.speed, // Y-axis will represent the Speed
-    color: disc.color, // Color of the point based on the color property of each disc
-    name: disc.name, // Name of the disc
+    x: disc.turn+disc.fade,
+    y: disc.speed,
+    color: disc.color,
+    name: disc.name,
   }));
 
   const renderCustomizedShape = (props: any) => {
     const { cx, cy, payload } = props;
     return (
-      <circle cx={cx} cy={cy} r={10} fill={payload.color} /> // multiply r by 3 times of original size
+      <circle cx={cx} cy={cy} r={10} fill={payload.color} />
     );
 };
 
@@ -30,7 +29,7 @@ const DiscChart: React.FC = () => {
           type="number"
           dataKey="x"
           name="Turn/Fade"
-          domain={['dataMax', 'dataMin']} // Reversed X-axis
+          domain={['dataMax', 'dataMin']}
           tickFormatter={(tick: number) => Math.round(tick).toString()}
         />
         <YAxis type="number" dataKey="y" name="Speed" domain={[0, 14]} tickCount={Math.ceil(dataMaxY / 2)} />
@@ -39,7 +38,7 @@ const DiscChart: React.FC = () => {
           {
             data.map((entry, index) => <Cell key={`cell-${index}`} fill={entry.color} />)
           }
-          <LabelList dataKey="name" position="top" /> {/* Display disc name as label on top of each point */}
+          <LabelList dataKey="name" position="top" /> {}
         </Scatter>
         <Label value="Turn/Fade" offset={0} position="insideBottom" />
         <Label value="Speed" offset={5} angle={-90} position="insideLeft" />
@@ -50,7 +49,7 @@ const DiscChart: React.FC = () => {
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
-    const disc = payload[0].payload; // Get the disc data from the payload
+    const disc = payload[0].payload;
     return (
       <div className="custom-tooltip">
         <p>{`Disc Name: ${disc.name}`}</p>

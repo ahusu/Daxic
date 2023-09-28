@@ -1,4 +1,3 @@
-// userSlice.ts
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
@@ -11,8 +10,6 @@ const openModalSlice = createSlice({
   name: 'openModal',
   initialState,
   reducers: {
-    // Define your action creators and their corresponding reducer logic here...
-    // For example:
     openModal: (state, action) => {
       state.open = true;
       state.type = action.payload.type

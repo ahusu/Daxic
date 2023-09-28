@@ -20,7 +20,7 @@ const DiscTable: React.FC = () => {
   }, [filter,discs]);
 
 
-  const writeFilter = (e: any) => setFilter(e.target.value)
+  const writeFilter = (e:{target:{value:string}}) => setFilter(e.target.value)
 
   type DiscTable = TableInstance<Disc>;
 
@@ -82,10 +82,8 @@ const DiscTable: React.FC = () => {
     []
   );
 
-  // Create a table instance
   const tableInstance = useTable({ columns, data: tableDiscs });
 
-  // Extract required methods and data from the table instance
   const {
     getTableProps,
     getTableBodyProps,

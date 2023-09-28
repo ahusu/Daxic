@@ -34,8 +34,6 @@ async function getChatGPTResponse(prompt) {
       //  }` },
                  { role: "user", content: prompt }],
     });
-
-    // Process the chat_completion response if needed
     return chat_completion.data.choices[0].message.content;
   } catch (error) {
     console.error('Error:', error.message);
