@@ -30,7 +30,6 @@ describe('Server Endpoints', () => {
   });
 
   it('POST /discs', async () => {
-      // Mock the db.query to resolve without an error
       const db = {
           query: jest.fn().mockResolvedValue()
       };
@@ -38,12 +37,9 @@ describe('Server Endpoints', () => {
       const discData = {
           name: 'NewDisc',
           speed: 5,
-          // ... other disc data
       };
 
       const res = await request(app).post('/discs').send(discData);
       expect(res.status).toBe(201);
   });
-
-  // Similar tests can be written for PUT /discs and DELETE /discs/:id
 });
