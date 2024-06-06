@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../redux/store';
 import { closeModal } from '../redux/reducers/openModalSlice';
 import { CirclePicker } from 'react-color';
-import { addDisc, editDisc, deleteDisc, fetchDiscsData } from '../redux/reducers/discsSlice';
+import { fetchMenu, logBag, editBag, closeOutBag } from '../redux/reducers/menuSlice';
 
 export default function AddDisc() {
 
@@ -19,30 +19,32 @@ export default function AddDisc() {
     setSub(openModal.edit ? { ...openModal.edit } : {});
   }, [openModal.edit]);
 
-  type ValidatedKeys = 'Name' | 'Speed' | 'Glide' | 'Turn' | 'Fade' | 'Manufacturer' | 'Color';
+  type ValidatedKeys = 'Name' | 'Weight' | 'Price' | 'Strain' | 'Notes' | 'Picture' | 'Tag' | 'Maker';
   type FillState = { [K in ValidatedKeys]: boolean };
 
   const [status, setStatus] = useState('init');
   const [sub, setSub] = useState<any>({});
   const [fill, setFill] = useState<FillState>({
     Name: false,
-    Speed: false,
-    Glide: false,
-    Turn: false,
-    Fade: false,
-    Manufacturer: false,
-    Color: false
+    Weight: false,
+    Price: false,
+    Strain: false,
+    Notes: false,
+    Picture: false,
+    Tag: false,
+    Maker: false
   });
 
   const validateForm = () => {
     let checkFill = { ...fill }
     if (sub.name) checkFill.Name = true;
-    if (sub.speed) checkFill.Speed = true;
-    if (sub.glide || sub.glide === 0) checkFill.Glide = true;
-    if (sub.turn || sub.turn === 0) checkFill.Turn = true;
-    if (sub.fade || sub.fade === 0) checkFill.Fade = true;
-    if (sub.manufacturer) checkFill.Manufacturer = true;
-    if (sub.color) checkFill.Color = true;
+    if (sub.weight) checkFill.Weight = true;
+    if (sub.price) checkFill.Price = true;
+    if (sub.strain) checkFill.Strain = true;
+    if (sub.notes) checkFill.Notes = true;
+    if (sub.hmid) checkFill.Maker = true;
+    if (sub.pic) checkFill.Picture = true;
+    if (sub.tag) checkFill.Tag = true;
     setFill(checkFill);
     let checkFalse = Object.values(checkFill).includes(false);
     if (checkFalse) setStatus('Incomplete');
@@ -51,15 +53,15 @@ export default function AddDisc() {
   };
 
   const post = (body: any) => {
-    if (openModal.type === 'add') dispatch(addDisc(sub));
+    if (openModal.type === 'add') dispatch(logBag(sub));
     if (openModal.type == 'edit') {
-      dispatch(editDisc(sub))
+      dispatch(editBag(sub))
     };
-    setTimeout(() => { dispatch(fetchDiscsData()) }, 200)
+    setTimeout(() => { dispatch(fetchMenu()) }, 200)
   }
   const remove = () => {
-    dispatch(deleteDisc(sub.id));
-    setTimeout(() => { dispatch(fetchDiscsData()) }, 200)
+    dispatch(closeOutBag(sub.id));
+    setTimeout(() => { dispatch(fetchMenu()) }, 200)
   }
 
   const handleColor = (color: any) => {
@@ -94,7 +96,7 @@ export default function AddDisc() {
         {/* Body */}
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div>
-            <label className="block mb-1">Disc Name</label>
+            <label className="block mb-1">Name</label>
             <input
               type="text"
               value={sub.name}
@@ -103,63 +105,63 @@ export default function AddDisc() {
             />
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block mb-1">Speed</label>
+                <label className="block mb-1">Strain</label>
                 <input
-                  type="number"
-                  value={sub.speed}
+                  type="text"
+                  value={sub.strain}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
-                  onChange={(e: any) => setSub({ ...sub, speed: e.target.value })}
+                  onChange={(e: any) => setSub({ ...sub, strain: e.target.value })}
                 />
-                <label className="block mb-1">Glide</label>
+                <label className="block mb-1">Weight (kg)</label>
                 <input
                   type="number"
-                  value={sub.glide}
+                  value={sub.weight}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
-                  onChange={(e: any) => setSub({ ...sub, glide: e.target.value })}
+                  onChange={(e: any) => setSub({ ...sub, weight: e.target.value })}
                 />
               </div>
 
               <div>
-                <label className="block mb-1">Turn</label>
+                <label className="block mb-1">Price</label>
                 <input
                   type="number"
-                  value={sub.turn}
+                  value={sub.price}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
-                  onChange={(e: any) => setSub({ ...sub, turn: e.target.value })}
+                  onChange={(e: any) => setSub({ ...sub, price: e.target.value })}
                 />
-                <label className="block mb-1">Fade</label>
+                <label className="block mb-1">Hash Maker ID</label>
                 <input
                   type="number"
-                  value={sub.fade}
+                  value={sub.hmid}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
-                  onChange={(e: any) => setSub({ ...sub, fade: e.target.value })}
+                  onChange={(e: any) => setSub({ ...sub, hmid: e.target.value })}
                 />
               </div>
             </div>
           </div>
 
           <div>
-            <label className="block mb-1">Manufacturer</label>
+            <label className="block mb-1">Notes</label>
             <input
               type="text"
-              value={sub.manufacturer}
+              value={sub.Notes}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
-              onChange={(e: any) => setSub({ ...sub, manufacturer: e.target.value })}
+              onChange={(e: any) => setSub({ ...sub, notes: e.target.value })}
             />
-            <label className="block mb-1">Weight in grams</label>
+            <label className="block mb-1">Picture</label>
             <input
-              type="number"
-              value={sub.weight}
+              type="text"
+              value={sub.Pic}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
-              onChange={(e: any) => setSub({ ...sub, weight: e.target.value })}
+              onChange={(e: any) => setSub({ ...sub, pic: e.target.value })}
             />
-            <label className="block mb-1">Plastic type</label>
+            {/* <label className="block mb-1">Tag</label>
             <input
               type="text"
               value={sub.plastic}
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-emerald-500 focus:border-emerald-500"
               onChange={(e: any) => setSub({ ...sub, plastic: e.target.value })}
-            />
+            /> */}
           </div>
         </div>
 

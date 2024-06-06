@@ -9,7 +9,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../redux/store';
 import { changePage } from '../redux/reducers/pageSlice';
 import { openModal } from '../redux/reducers/openModalSlice';
-import { fetchDiscsData } from '../redux/reducers/discsSlice';
+import { fetchMenu } from '../redux/reducers/menuSlice';
 
 export default function App() {
   let page = useSelector((state: RootState) => state.page).page
@@ -17,7 +17,7 @@ export default function App() {
   let dispatch:AppDispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchDiscsData());
+    dispatch(fetchMenu());
   }, []);
 
 

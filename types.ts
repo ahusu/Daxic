@@ -1,12 +1,10 @@
-export interface Disc {
+export interface Bag {
   name: string;
-  speed: number;
-  glide: number;
-  turn: number;
-  fade: number;
-  weight: string;
-  manufacturer: string;
-  plastic: string;
-  color: string;
-  type: string;
+  hm: string;
+  weight: number;
+  price: number;
+  strain: string;
+  notes: string;
+  pic: string;
+  tag: string
 }
