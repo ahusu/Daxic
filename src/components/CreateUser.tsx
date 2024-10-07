@@ -19,7 +19,7 @@ export default function CreateUser() {
     setSub(openModal.edit ? { ...openModal.edit } : {});
   }, [openModal.edit]);
 
-  type ValidatedKeys = 'User' | 'Alias' | 'Role' | 'Notes' | 'Recieving Wallet (tron)' ;
+  type ValidatedKeys = 'Name' | 'Weight' | 'Price' | 'Strain' | 'Notes' | 'Picture' | 'Tag' |'Maker' ;
   type FillState = { [K in ValidatedKeys]: boolean };
 
   const [status, setStatus] = useState('init');
@@ -45,6 +45,7 @@ export default function CreateUser() {
     if (sub.hmid) checkFill.Maker = true;
     if (sub.pic) checkFill.Picture = true;
     if (sub.tag) checkFill.Tag = true;
+    if (sub.maker) checkFill.Maker = true;
     setFill(checkFill);
     let checkFalse = Object.values(checkFill).includes(false);
     if (checkFalse) setStatus('Incomplete');
