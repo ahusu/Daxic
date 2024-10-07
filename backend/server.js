@@ -28,75 +28,122 @@ app.get('*.css', (req, res, next) => {
   next();
 });
 
-app.get('/discs', async (req, res) => {
-  let query = `SELECT * FROM discs;`
+app.get('/menu', async (req, res) => {
+  let query = `SELECT * FROM stock;`
   try {
-    let discs = await db.query(query)
-    res.status(200).send(discs)
+    let menu = await db.query(query)
+    res.status(200).send(menu)
   } catch (err) {
     res.status(400).send(err)
   }
 });
 
-app.post('/ai', async (req, res) => {
-  console.log(req.body)
-  let prompt = `These are the discs in my bag right now: ${req.body.bag}.  Can you recommend me 5 discs to try with the descriptions of how they might be good fits? Please separate each description into it's own paragraph`
-  try {
-    let gptResponse = await getChatGPTResponse(prompt);
-    res.status(200).send(gptResponse);
-  } catch (err) {
-    res.status(400).send(err)
-  }
-});
+// app.post('/ai', async (req, res) => {
+//   console.log(req.body)
+//   let prompt = `These are the discs in my bag right now: ${req.body.bag}.  Can you recommend me 5 discs to try with the descriptions of how they might be good fits? Please separate each description into it's own paragraph`
+//   try {
+//     let gptResponse = await getChatGPTResponse(prompt);
+//     res.status(200).send(gptResponse);
+//   } catch (err) {
+//     res.status(400).send(err)
+//   }
+// });
 
-app.post('/discs', async (req, res) => {
+app.post('/logBag', async (req, res) => {
 
   let query = `
-  INSERT INTO discs (name, speed, glide, turn, fade, weight, manufacturer, plastic, color, type)
-  VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10);`
+  INSERT INTO stock (name, hmid, weight, notes, picture, strain, price, tag)
+  VALUES ($1,$2,$3,$4,$5,$6,$7,$8);`
+  console.log(query)
   try {
-    await db.query(query, [req.body.name, req.body.speed, req.body.glide, req.body.turn, req.body.fade, req.body.weight, req.body.manufacturer, req.body.plastic, req.body.color, findType(req.body.speed)]);
+    await db.query(query, [req.body.name, req.body.hmid, req.body.weight, req.body.notes, req.body.picture, req.body.strain, req.body.price, req.body.tag]);
     res.status(201).send('Success!')
   } catch (err) {
     console.log(err)
-    res.status(400).send('Error adding disc')
+    res.status(400).send('Error logging bag')
   }
 });
 
-app.put('/discs', async(req,res)=>{
-  console.log(req.body)
-  let query = `UPDATE discs SET
-  name = $1, speed = $2, glide= $3, turn= $4, fade= $5, weight= $6, manufacturer= $7, plastic= $8, color= $9, type= $10
-  WHERE id = $11`
+app.post('/addPerson', async (req, res) => {
+  let query = `
+  INSERT INTO people (name, role)
+  VALUES ($1, $2);`
   try {
-    await db.query(query, [req.body.name, req.body.speed, req.body.glide, req.body.turn, req.body.fade, req.body.weight, req.body.manufacturer, req.body.plastic, req.body.color, findType(req.body.speed), req.body.id]);
+    await db.query(query, [req.body.name, req.body.role])
+    res.status(201).send('Added person!')
+  } catch (err) {
+    console.log(err)
+    res.status(400).send('Error: ' + err.message)
+  }
+})
+
+app.put('/alterBag', async(req,res)=>{
+  let query = `UPDATE stock SET
+  name = $1, hmid = $2, weight= $3, notes= $4, picture= $5, strain=$6, price= $7, tag= $8
+  WHERE id = $9`
+  try {
+    await db.query(query, [req.body.name, req.body.hmid, req.body.weight, req.body.notes, req.body.picture, req.body.strain, req.body.price, req.body.tag, req.body.id]);
     res.status(200).send('Success!')
   } catch (err) {
     console.log(err)
-    res.status(400).send('Error editing disc')
+    res.status(400).send('Error editing bag')
   }
 });
 
-app.delete('/discs/:id', async(req,res)=>{
-  let query = `DELETE FROM discs
-  WHERE id = $1`
+app.put('/closeOutBag/:bag_id', async (req, res) => {
+  const bagId = req.params.bag_id;
+
+  const outLogQuery = 'SELECT * FROM stock WHERE id = $1';
+  const deleteQuery = 'DELETE FROM stock WHERE id = $1';
+
   try {
-    await db.query(query, req.params.id);
-    res.status(202).send('Success!')
+    const result = await db.query(outLogQuery, [bagId]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).send('Bag not found');
+    }
+
+    const outLog = result.rows[0];
+
+    const closeoutQuery = `
+      INSERT INTO closedout (name, hmid, weight, notes, picture, strain, price, tag)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8);
+    `;
+
+    try {
+      await db.query(closeoutQuery, [
+        outLog.name,
+        outLog.hmid,
+        outLog.weight,
+        outLog.notes,
+        outLog.picture,
+        outLog.strain,
+        outLog.price,
+        outLog.tag
+      ]);
+
+      await db.query(deleteQuery, [bagId]);
+
+      res.status(202).send('Success!');
+    } catch (err) {
+      console.log(err);
+      res.status(400).send('Error closing out bag');
+    }
   } catch (err) {
-    console.log(err)
-    res.status(400).send('Error removing disc')
+    console.log(err);
+    res.status(400).send('Error removing bag');
   }
 });
 
-const findType = (speed) =>{
-  let discType;
-  if (speed <= 3) { discType = "Putter"; }
-  else if (speed <= 5) { discType = 'Midrange'; }
-  else if (speed <= 8) { discType = 'Fairway Driver'; }
-  else { discType = 'Distance Driver'; };
-  return discType;
-}
+
+// const findType = (speed) =>{
+//   let discType;
+//   if (speed <= 3) { discType = "Putter"; }
+//   else if (speed <= 5) { discType = 'Midrange'; }
+//   else if (speed <= 8) { discType = 'Fairway Driver'; }
+//   else { discType = 'Distance Driver'; };
+//   return discType;
+// }
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

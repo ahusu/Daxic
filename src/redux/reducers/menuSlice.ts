@@ -1,31 +1,39 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { Bag } from '../../../types';
+import { Bag, User } from '../../../types';
 import axios from 'axios';
 
 const initialState: {
   bag: Bag;  // Assuming bag is initialized with default values
   menu: Bag[];
+  user: User;
+  users: User[];
 } = {
   bag: {} as Bag,  // Assuming bag is initialized with a type assertion
   menu: [],
+  user: {} as User,
+  users: [],
 };
 //Async Model functions
-export const fetchMenu = createAsyncThunk('stock/fetchMenu', async () => {
+export const fetchMenu = createAsyncThunk('/fetchMenu', async () => {
   const response = await axios.get('/menu');
   return response.data;
 });
-export const logBag = createAsyncThunk('stock/logBag', async (bag: Bag) => {
+export const logBag = createAsyncThunk('/logBag', async (bag: Bag) => {
   const response = await axios.post('/logBag', bag);
   return response.data;
 });
-export const editBag = createAsyncThunk('stock/editBag', async (bag: Bag) => {
+export const editBag = createAsyncThunk('/editBag', async (bag: Bag) => {
   const response = await axios.put('/alterBag', bag);
   return response.data;
 });
-export const closeOutBag = createAsyncThunk('stock/deleteBag', async (bag_id: String) => {
-  const response = await axios.put('/closeOutBag', bag_id);
+export const closeOutBag = createAsyncThunk('/closeOutBag', async (bag_id: String) => {
+  const response = await axios.put(`/closeOutBag/${bag_id}`);
   return response.data;
 });
+export const newUser = createAsyncThunk('/newUser', async (user: User) =>{
+  const response = await axios.post(`/newUser/${user}`);
+});
+
 
 const menuSlice = createSlice({
   name: 'menu',

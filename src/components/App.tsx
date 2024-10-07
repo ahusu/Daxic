@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import Landing from './pages/Landing';
 import Inventory from './pages/Inventory';
-import Recs from './pages/Recs';
-import Learn from './pages/Learn';
-import AddDisc from './AddDisc';
+// import Recs from './pages/Recs';
+// import Learn from './pages/Learn';
+import LogBag from './LogBag';
 import Banner from "./Banner";
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, AppDispatch } from '../redux/store';
@@ -41,25 +41,25 @@ export default function App() {
     case 'Inventory':
       display = <Inventory key='Inventory' />;
       break;
-    case 'Recommendations':
-      display = <Recs key='recs' />;
-      break;
-    case 'Learn':
-      display = <Learn key='learn' />;
-      break;
+    // case 'Recommendations':
+    //   display = <Recs key='recs' />;
+    //   break;
+    // case 'Learn':
+    //   display = <Learn key='learn' />;
+    //   break;
   }
 
   return (
     <div className="w-10/12 m-2 p-1 justify-between">
       <Banner />
       <div id='navbar' className="flex justify-between w-full h-[65px] m-auto bg-indigo-300">
-        <div className="hover:bg-indigo-500 w-3/12 text-lg justify-center items-center flex" onClick={() => { navClick('add') }}>Add a disc</div>
+        <div className="hover:bg-indigo-500 w-3/12 text-lg justify-center items-center flex" onClick={() => { navClick('add') }}>Log a bag</div>
         {pages.map((title) => {
           return (<div className="hover:bg-indigo-500 w-3/12 text-lg justify-center items-center flex" onClick={() => { navClick(title) }}>{title}</div>)
         })}
       </div>
       {display}
-      {useSelector((state: RootState) => state.openModal.open) ? <AddDisc /> : null}
+      {useSelector((state: RootState) => state.openModal.open) ? <LogBag /> : null}
 
     </div>
   )
